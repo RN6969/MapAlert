@@ -1,1 +1,1 @@
-DATABASE_URL = "mysql+pymysql://ma:rush6969@192.168.152.80/mapalert"
+DATABASE_URL = "mysql://root:rush#6969@34.123.247.96/map-alert-453317:us-central1:map-alert"
