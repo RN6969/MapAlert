@@ -1,19 +1,21 @@
 from fastapi import FastAPI, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-import models, schemas, database
 from typing import List
 
+import models, schemas, database
 from database import SessionLocal
 
 app = FastAPI()
 
+# Dependency to get DB session
 def get_db():
-    db = database.SessionLocal()
+    db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
 
+# ✅ Report a crime
 @app.post("/crimes/report", response_model=schemas.CrimeReportBase)
 def report_crime(crime: schemas.CrimeReportCreate, db: Session = Depends(get_db)):
     try:
@@ -26,21 +28,21 @@ def report_crime(crime: schemas.CrimeReportCreate, db: Session = Depends(get_db)
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Error reporting crime: {str(e)}")
 
+# ✅ Get nearby crimes (you should add filtering logic later)
 @app.get("/crimes/nearby", response_model=List[schemas.CrimeReportBase])
 def get_nearby_crimes(
     latitude: float = Query(...),
     longitude: float = Query(...),
-    radius: float = Query(...)
+    radius: float = Query(...),
+    db: Session = Depends(get_db)
 ):
-    db = SessionLocal()
     try:
         crimes = db.query(models.CrimeReport).all()
         return crimes
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching crimes: {str(e)}")
-    finally:
-        db.close()
 
+# ✅ Get all crimes
 @app.get("/crimes/all", response_model=List[schemas.CrimeReportResponse])
 def get_all_crimes(db: Session = Depends(get_db)):
     try:
