@@ -3,11 +3,14 @@ from sqlalchemy.orm import Session
 from typing import List
 
 import models, schemas, database
-from database import SessionLocal
+from database import SessionLocal, engine, Base
 
 app = FastAPI()
 
-# Dependency to get DB session
+# ✅ Create all tables if they don't exist
+Base.metadata.create_all(bind=engine)
+
+# ✅ Dependency to get DB session
 def get_db():
     db = SessionLocal()
     try:
