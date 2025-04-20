@@ -93,19 +93,32 @@ def search_crimes(
     try:
         query = db.query(models.CrimeReport)
 
-        if crime_type and location:
-            # Crime + Location → filter both
-            query = query.filter(
-                models.CrimeReport.crime_type.ilike(f"%{crime_type}%"),
-                models.CrimeReport.description.ilike(f"%{location}%")
-            )
+        if crime_type and location and user_lat is not None and user_lon is not None:
+            # Crime + Location → match both by type and coordinates (~1km)
+            all_crimes = query.filter(models.CrimeReport.crime_type.ilike(f"%{crime_type}%")).all()
+            filtered = []
+            target_coords = (user_lat, user_lon)
 
-        elif location and not crime_type:
-            # Location only
-            query = query.filter(models.CrimeReport.description.ilike(f"%{location}%"))
+            for crime in all_crimes:
+                crime_coords = (crime.latitude, crime.longitude)
+                if geodesic(target_coords, crime_coords).km < 1:
+                    filtered.append(crime)
+            return filtered
+
+        elif location and user_lat is not None and user_lon is not None:
+            # Only Location
+            all_crimes = query.all()
+            filtered = []
+            target_coords = (user_lat, user_lon)
+
+            for crime in all_crimes:
+                crime_coords = (crime.latitude, crime.longitude)
+                if geodesic(target_coords, crime_coords).km < 1:
+                    filtered.append(crime)
+            return filtered
 
         elif crime_type and user_lat is not None and user_lon is not None:
-            # Crime only + User Location → find crimes of that type near user
+            # Only Crime Type + User Location (within 50km)
             all_crimes = query.filter(models.CrimeReport.crime_type.ilike(f"%{crime_type}%")).all()
             filtered = []
             user_coords = (user_lat, user_lon)
@@ -119,9 +132,9 @@ def search_crimes(
         else:
             return []
 
-        return query.all()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error searching crimes: {str(e)}")
+
 
 # ✅ Get all crimes
 @app.get("/crimes/all", response_model=List[schemas.CrimeReportResponse])
