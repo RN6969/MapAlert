@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <application
+        android:name=".MyApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MapAlert"
+        android:usesCleartextTraffic="false"
+        tools:targetApi="31">
+        <activity
+            android:name=".activities.SearchMapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FullMapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ZonePreferenceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false" />
+        <activity android:name=".activities.SelectLocationActivity" />
+        <activity
+            android:name=".EmergencyActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MapAlert" />
+        <activity
+            android:name=".NotificationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MapAlert" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity android:name=".activities.EditProfileActivity" />
+        <activity android:name=".activities.ZonePreferenceActivity" />
+        <activity
+            android:name=".RegistrationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDyEybMEVy7B-me-o4KT4fx2GFMbHIFx2A" />
+
+        <service
+            android:name=".MyApp"
+            android:enabled="true"
+            android:exported="false" />
+    </application>
+
+</manifest>

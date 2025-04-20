@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- "Select a Zone" Label -->
+    <TextView
+        android:id="@+id/label_select_zone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zone Preferences"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"/>
+
+    <!-- Map Preview Window -->
+    <FrameLayout
+        android:id="@+id/map_preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="100dp"
+        android:background="@color/gray"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        tools:ignore="DuplicateClickableBoundsCheck">
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map_preview"
+            android:layout_width="match_parent"
+            android:contentDescription="select a zone"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <Spinner
+        android:id="@+id/spinner_risky"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:prompt="@string/risky_area"/>
+    <Spinner
+        android:id="@+id/spinner_safe"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:prompt="@string/safe_area"/>
+
+</LinearLayout>

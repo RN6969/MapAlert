@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/red"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/emergencyAlertText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Emergency Alert Activated!"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:paddingBottom="20dp"/>
+
+    <!-- Flashlight Icon -->
+    <ImageView
+        android:id="@+id/emergencyFlashIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_flash"
+        android:contentDescription="Flashlight"
+        android:padding="20dp"/>
+
+    <!-- Cancel Button -->
+    <Button
+        android:id="@+id/cancelEmergencyBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancel Emergency"
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:padding="10dp"/>
+</LinearLayout>
