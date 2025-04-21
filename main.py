@@ -37,7 +37,7 @@ def report_crime(crime: schemas.CrimeReportCreate, db: Session = Depends(get_db)
 def get_nearby_crimes(
     latitude: float = Query(None),
     longitude: float = Query(None),
-    radius: float = Query(50),  # default 50km if only crime is provided
+    radius: float = Query(50),  # Default to 50km
     location: str = Query(None),
     crime_type: str = Query(None),
     db: Session = Depends(get_db)
@@ -47,35 +47,30 @@ def get_nearby_crimes(
         filtered = []
 
         for crime in crimes:
-            crime_loc = (crime.latitude, crime.longitude)
-            user_loc = (latitude, longitude) if latitude and longitude else None
-            distance_ok = True
-            type_ok = True
-            location_ok = True
+            match = True
 
-            # Filter by distance only if user location is known (for "only crime" case)
-            if crime_type and not location and user_loc:
-                distance_ok = geodesic(user_loc, crime_loc).km <= radius
+            # ✅ If user location provided, check distance
+            if latitude is not None and longitude is not None:
+                user_coords = (latitude, longitude)
+                crime_coords = (crime.latitude, crime.longitude)
+                distance = geodesic(user_coords, crime_coords).km
 
-            # Filter by exact coordinates if location is used (assuming app gets lat/lng from Places SDK)
-            if location and latitude and longitude:
-                distance_ok = geodesic((latitude, longitude), crime_loc).km < 1  # ~1km radius for location match
+                # 🔹 Only check radius if we are doing "only crime near me"
+                if crime_type and not location:
+                    if distance > radius:
+                        match = False
 
-            if crime_type:
-                type_ok = crime.crime_type.lower() == crime_type.lower()
+                # 🔹 If location is present, match only if it's very close (~1km)
+                if location:
+                    if distance > 1:  # 1km radius for place match
+                        match = False
 
-            if crime_type and location:
-                # Match both
-                if distance_ok and type_ok:
-                    filtered.append(crime)
-            elif crime_type and not location:
-                # Only crime near user location
-                if distance_ok and type_ok:
-                    filtered.append(crime)
-            elif location and not crime_type:
-                # Only location match
-                if distance_ok:
-                    filtered.append(crime)
+            # ✅ If crime_type is provided, filter by type
+            if crime_type and crime.crime_type.lower() != crime_type.lower():
+                match = False
+
+            if match:
+                filtered.append(crime)
 
         return filtered
 
